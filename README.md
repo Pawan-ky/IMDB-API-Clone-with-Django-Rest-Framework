@@ -1,0 +1,1 @@
+# IMDB-API-Clone-with-Django-Rest-Framework
