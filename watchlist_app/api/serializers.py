@@ -11,7 +11,14 @@ class WatchListSerializer(serializers.ModelSerializer):
         # exclude = ['name']        # to exclude selected fields in the model
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
-    watchlist = WatchListSerializer(many=True,read_only=True)
+    # watchlist = WatchListSerializer(many=True,read_only=True)   #for complete movie object
+
+    # watchlist = serializers.StringRelatedField(many=True,read_only=True)
+    watchlist = serializers.HyperlinkedRelatedField(
+        many=True,
+        read_only=True,
+        view_name='movie_detail'
+    )
     class Meta:
         model = StreamPlatform
         fields = '__all__'
