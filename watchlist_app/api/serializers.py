@@ -1,14 +1,34 @@
 from rest_framework import serializers
-from watchlist_app.models import WatchList,StreamPlatform
+from watchlist_app.models import WatchList,StreamPlatform,Reviews
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Reviews
+        fields = '__all__'
+
 
 class WatchListSerializer(serializers.ModelSerializer):
     #  to show extra fields in response w/o adding it to model
     # name_length = serializers.SerializerMethodField()
+    
+    review = ReviewSerializer(many=True,read_only=True)
     class Meta:
         model = WatchList
         fields = '__all__'             # to access all fields in the model
         # fields = ['id', 'name', 'description']           # to access secetive fields in the model
         # exclude = ['name']        # to exclude selected fields in the model
+
+    # def get_name_length(self, obj):
+    #     return len(obj.name)
+
+    # def validate_name (self, value):
+    #     if len(value)<=3:
+    #         raise serializers.ValidationError("Name must be at least 4 characters long")
+    #     return value
+    # def validate(self, data):
+    #     if data["name"] == data["description"]:
+    #         raise serializers.ValidationError("Name and description cannot be the same")
+    #     return data
 
 class StreamPlatformSerializer(serializers.ModelSerializer):
     # watchlist = WatchListSerializer(many=True,read_only=True)   #for complete movie object
@@ -25,22 +45,6 @@ class StreamPlatformSerializer(serializers.ModelSerializer):
 
 
         
-
-
-    # def get_name_length(self, obj):
-    #     return len(obj.name)
-
-    # def validate_name (self, value):
-    #     if len(value)<=3:
-    #         raise serializers.ValidationError("Name must be at least 4 characters long")
-    #     return value
-    # def validate(self, data):
-    #     if data["name"] == data["description"]:
-    #         raise serializers.ValidationError("Name and description cannot be the same")
-    #     return data
-
-
-
 
 
 
