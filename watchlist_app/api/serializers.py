@@ -3,12 +3,19 @@ from watchlist_app.models import Movie
 
 
 class MovieSerializer(serializers.ModelSerializer):
+
+    #  to show extra fields in response w/o adding it to model
+    name_length = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = '__all__'             # to access all fields in the model
         # fields = ['id', 'name', 'description']           # to access secetive fields in the model
         # exclude = ['name']        # to exclude selected fields in the model
 
+    def get_name_length(self, obj):
+        return len(obj.name)
+        
     def validate_name (self, value):
         if len(value)<=3:
             raise serializers.ValidationError("Name must be at least 4 characters long")
