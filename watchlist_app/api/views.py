@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 # from rest_framework import mixins
 from rest_framework import generics
 from rest_framework import viewsets
+from rest_framework.exceptions import ValidationError
 
 from django.shortcuts import get_object_or_404
 
@@ -17,11 +18,19 @@ from watchlist_app.api.serializers import (WatchListSerializer,StreamPlatformSer
 class ReviewCreateGCV(generics.CreateAPIView):
     serializer_class = ReviewSerializer
 
+    def get_queryset(self):
+        return Reviews.objects.all()
+
     def perform_create(self,serializer):
         pk = self.kwargs.get('pk')
         movie = WatchList.objects.get(pk=pk)
 
-        serializer.save(watchlist=movie)
+        user = self.request.user
+        queryset = Reviews.objects.filter(watchlist=movie,review_user=user)
+        if queryset.exists():
+            raise ValidationError("You reviewed this moview already")
+
+        serializer.save(watchlist=movie,review_user=user)
 
 class ReviewListGCV(generics.ListAPIView):
     # queryset = Reviews.objects.all()          override this method
@@ -76,7 +85,7 @@ class WatchDetailAV(APIView):
     def get(self,request, pk):
         try:
             movie =  WatchList.objects.get(pk=pk)
-        except Movie.DoesNotExist:
+        except WatchList.DoesNotExist:
             return Response({"error":"movie not found"},status=status.HTTP_404_NOT_FOUND)
         serializer = WatchListSerializer(movie)
         return Response(serializer.data)
@@ -84,7 +93,7 @@ class WatchDetailAV(APIView):
     def put(self, request, pk):
         try:
             movie = WatchList.objects.get(pk=pk)
-        except Movie.DoesNotExist:
+        except WatchList.DoesNotExist:
             return Response({"error":"movie not found"},status=status.HTTP_404_NOT_FOUND)
         serializer = WatchListSerializer(movie, data=request.data)
         if serializer.is_valid():
@@ -95,7 +104,7 @@ class WatchDetailAV(APIView):
     def delete(self, request, pk):
         try:
             movie = WatchList.objects.get(pk=pk)
-        except Movie.DoesNotExist:
+        except WatchList.DoesNotExist:
             return Response({"error":"movie not found"},status=status.HTTP_404_NOT_FOUND)
         movie.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

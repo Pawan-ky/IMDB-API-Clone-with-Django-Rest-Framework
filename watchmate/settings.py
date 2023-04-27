@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+CSRF_TRUSTED_ORIGINS=['https://pawan-ky-legendary-yodel-vr54rgrxw69hwrqw-8000.preview.app.github.dev']
 # Application definition
 
 INSTALLED_APPS = [
