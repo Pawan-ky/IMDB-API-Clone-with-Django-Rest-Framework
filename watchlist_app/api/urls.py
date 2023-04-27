@@ -17,11 +17,11 @@ urlpatterns = [
 
     #  class based views
     path("list/",WatchListAV.as_view(),name="movie_list"),
-    path('<int:pk>',WatchDetailAV.as_view(),name="movie_detail"),
+    path('<int:pk>/',WatchDetailAV.as_view(),name="movie_detail"),
 
     # w/o viewsets
     path("stream/",StreamPlatformAV.as_view(),name="stream"),
-    path("stream/<int:pk>",StreamPlatformDetailAV.as_view(),name="stream_detail"),
+    path("stream/<int:pk>/",StreamPlatformDetailAV.as_view(),name="stream_detail"),
     # with viewsets
     # path('',include(router.urls)),
 
@@ -30,8 +30,8 @@ urlpatterns = [
     # path("review/<int:pk>",ReviewDetailGV.as_view(),name="review-detail"),
 
     #  generic concrete class views used
-    path("stream/<int:pk>/review-create",ReviewCreateGCV.as_view(),name="review-create"),
-    path("stream/<int:pk>/review",ReviewListGCV.as_view(),name="review-list"),
-    path("stream/review/<int:pk>",ReviewDetailGCV.as_view(),name="review-detail")
+    path("<int:pk>/review-create/",ReviewCreateGCV.as_view(),name="review-create"),
+    path("<int:pk>/reviews/",ReviewListGCV.as_view(),name="review-list"),
+    path("review/<int:pk>/",ReviewDetailGCV.as_view(),name="review-detail")
 
 ]

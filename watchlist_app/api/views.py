@@ -7,11 +7,14 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.exceptions import ValidationError
 
+from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
 from django.shortcuts import get_object_or_404
 
+from watchlist_app.api.permissions import AdminorReadOnly,ReviewUserorReadOnly
 from watchlist_app.models import WatchList,StreamPlatform,Reviews
 from watchlist_app.api.serializers import (WatchListSerializer,StreamPlatformSerializer,
                                         ReviewSerializer)
+
 
 # concrete generic view class 
 
@@ -29,10 +32,20 @@ class ReviewCreateGCV(generics.CreateAPIView):
         queryset = Reviews.objects.filter(watchlist=movie,review_user=user)
         if queryset.exists():
             raise ValidationError("You reviewed this moview already")
+        
+        if movie.number_rating ==0:
+            movie.avg_rating = serializer.validated_data['rating']
+        else:
+            movie.avg_rating = (movie.avg_rating*movie.number_rating+serializer.validated_data['rating'])/(movie.number_rating+1)
+        movie.number_rating +=1 
+        movie.save() 
+
 
         serializer.save(watchlist=movie,review_user=user)
 
 class ReviewListGCV(generics.ListAPIView):
+
+    permission_classes = [AdminorReadOnly]
     # queryset = Reviews.objects.all()          override this method
     serializer_class = ReviewSerializer
 
@@ -41,6 +54,8 @@ class ReviewListGCV(generics.ListAPIView):
         return Reviews.objects.filter(watchlist=pk)
 
 class ReviewDetailGCV(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [ReviewUserorReadOnly]
+
     queryset = Reviews.objects.all()
     serializer_class = ReviewSerializer
 
