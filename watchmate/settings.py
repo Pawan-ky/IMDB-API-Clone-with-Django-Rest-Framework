@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     "watchlist_app",
     "rest_framework",
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -127,9 +128,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # here we can apply permission to all the classes in views in one go
+# basic authentication
+REST_FRAMEWORK = {
+    #DEFAULT_PERMISSION_CLASSES': [
+    #  'rest_framework.permissions.IsAuthenticated',
+    #]
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework.authentication.BasicAuthentication',
+    # ]
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_PERMISSION_CLASSES': [
-#         'rest_framework.permissions.IsAuthenticated',
-#     ]
-# }
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}

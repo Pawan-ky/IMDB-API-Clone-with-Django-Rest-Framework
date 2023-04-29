@@ -45,7 +45,7 @@ class ReviewCreateGCV(generics.CreateAPIView):
 
 class ReviewListGCV(generics.ListAPIView):
 
-    permission_classes = [AdminorReadOnly]
+    permission_classes = [IsAuthenticated]
     # queryset = Reviews.objects.all()          override this method
     serializer_class = ReviewSerializer
 
