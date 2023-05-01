@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "watchlist_app",
+    
     "rest_framework",
     'rest_framework.authtoken',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -145,10 +147,20 @@ REST_FRAMEWORK = {
     #     'rest_framework.throttling.UserRateThrottle',
     # ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '1/day',
-        'user': '3/day',
-        'review-create':'2/day',
-        'review-list':'10/day',
-        'review-detail':'3/day',
-    }
+        'anon': '10/day',
+        'user': '30/day',
+        'review-create':'4/day',
+        'review-list':'30/day',
+        'review-detail':'30/day',
+    },
+    
+    # pagination settings for global settings
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 3,
+    
+    
+    # to disable browsable api and return json only response
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
 }

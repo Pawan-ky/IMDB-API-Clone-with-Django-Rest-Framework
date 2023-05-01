@@ -13,7 +13,9 @@ class WatchListSerializer(serializers.ModelSerializer):
     #  to show extra fields in response w/o adding it to model
     # name_length = serializers.SerializerMethodField()
     
-    review = ReviewSerializer(many=True,read_only=True)
+    # review = ReviewSerializer(many=True,read_only=True)
+    # showing name istead of id
+    platform = serializers.CharField(source='platform.name')
     class Meta:
         model = WatchList
         fields = '__all__'             # to access all fields in the model
